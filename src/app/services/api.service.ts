@@ -34,4 +34,53 @@ export class ApiService {
       })
     );
   }
+
+  // Admin methods for product management
+  createProduct(productData: any): Observable<any> {
+    const endpoint = `${this.apiUrl}/api/Products`;
+    console.log('ApiService.createProduct() called, endpoint:', endpoint);
+    
+    return this.http.post(endpoint, productData).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('ApiService.createProduct() error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  updateProduct(productId: number, productData: any): Observable<any> {
+    const endpoint = `${this.apiUrl}/api/Products/${productId}`;
+    console.log('ApiService.updateProduct() called, endpoint:', endpoint);
+    
+    return this.http.put(endpoint, productData).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('ApiService.updateProduct() error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  deleteProduct(productId: number): Observable<any> {
+    const endpoint = `${this.apiUrl}/api/Products/${productId}`;
+    console.log('ApiService.deleteProduct() called, endpoint:', endpoint);
+    
+    return this.http.delete(endpoint).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('ApiService.deleteProduct() error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getCategories(): Observable<any> {
+    const endpoint = `${this.apiUrl}/api/Products/categories`;
+    console.log('ApiService.getCategories() called, endpoint:', endpoint);
+    
+    return this.http.get(endpoint).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('ApiService.getCategories() error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }
