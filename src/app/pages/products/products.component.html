@@ -1,0 +1,85 @@
+<div class="container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>Discover Our Products</h1>
+    <p>Explore our amazing collection of high-quality products</p>
+  </div>
+  
+  <!-- Content Section -->
+  @if (isLoading) {
+    <!-- Loading State -->
+    <div class="loading-container">
+      <mat-spinner class="spinner"></mat-spinner>
+    </div>
+  } @else if (error) {
+    <!-- Error State -->
+    <div class="error-container">
+      <h2 class="error-message">{{ error }}</h2>
+      <p>Please try again later or contact support if the problem persists.</p>
+    </div>
+  } @else {
+    <!-- Products Grid -->
+    <div class="products-grid">
+      @for (product of products; track product.id) {
+        <mat-card class="product-card">
+          <!-- Product Image -->
+          <img 
+            mat-card-image 
+            class="product-image"
+            [src]="product.imageUrl" 
+            [alt]="product.name"
+            (error)="onImageError($event)">
+          
+          <!-- Product Content -->
+          <mat-card-content class="product-content">
+            <!-- Product Name -->
+            <h3 class="product-name">{{ product.name }}</h3>
+            
+            <!-- Product Description -->
+            <p class="product-description">{{ product.description }}</p>
+            
+            <!-- Product Price -->
+            <p class="product-price">${{ product.price | number:'1.2-2' }}</p>
+            
+            <!-- Product Details -->
+            <div class="product-details">
+              <!-- Stock Information -->
+              <div class="stock-info">
+                <div 
+                  class="stock-icon"
+                  [ngClass]="{
+                    'stock-high': product.stockQuantity > 50,
+                    'stock-medium': product.stockQuantity > 20 && product.stockQuantity <= 50,
+                    'stock-low': product.stockQuantity <= 20
+                  }">
+                </div>
+                <span>Stock: {{ product.stockQuantity }}</span>
+              </div>
+              
+              <!-- Category Badge -->
+              <span class="category-badge">{{ product.categoryName }}</span>
+            </div>
+            
+            <!-- Add to Cart Button -->
+            <button class="add-to-cart-btn">
+              Add to Cart
+            </button>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+    
+    <!-- Pagination -->
+    @if (totalCount > pageSize) {
+      <div class="paginator-container">
+        <mat-paginator 
+          [length]="totalCount"
+          [pageSize]="pageSize"
+          [pageIndex]="pageNumber - 1"
+          [pageSizeOptions]="[5, 10, 25, 100]"
+          (page)="onPageChange($event)">
+        </mat-paginator>
+      </div>
+    }
+  }
+</div>

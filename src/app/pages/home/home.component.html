@@ -1,0 +1,150 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title">Welcome to SURE Store</h1>
+    <p class="hero-subtitle">Discover amazing products at unbeatable prices. Shop the latest trends and find exactly what you're looking for.</p>
+    <div class="hero-buttons">
+      <a routerLink="/products" class="hero-btn hero-btn-primary">Shop Now</a>
+      <a routerLink="/categories" class="hero-btn hero-btn-secondary">Browse Categories</a>
+    </div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section">
+  <div class="section-header">
+    <h2 class="section-title">Shop by Category</h2>
+    <p class="section-subtitle">Explore our wide range of product categories and find what suits your style</p>
+  </div>
+  
+  <div class="categories-grid">
+    <div class="category-card" routerLink="/products">
+      <div class="category-image">📱</div>
+      <div class="category-content">
+        <h3 class="category-name">Electronics</h3>
+        <p class="category-description">Latest smartphones, laptops, and gadgets</p>
+      </div>
+    </div>
+    
+    <div class="category-card" routerLink="/products">
+      <div class="category-image">👕</div>
+      <div class="category-content">
+        <h3 class="category-name">Fashion</h3>
+        <p class="category-description">Trendy clothing and accessories</p>
+      </div>
+    </div>
+    
+    <div class="category-card" routerLink="/products">
+      <div class="category-image">📚</div>
+      <div class="category-content">
+        <h3 class="category-name">Books</h3>
+        <p class="category-description">Best-selling books and literature</p>
+      </div>
+    </div>
+    
+    <div class="category-card" routerLink="/products">
+      <div class="category-image">🏠</div>
+      <div class="category-content">
+        <h3 class="category-name">Home & Garden</h3>
+        <p class="category-description">Everything for your perfect home</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="featured-section">
+  <div class="section-header">
+    <h2 class="section-title">Featured Products</h2>
+    <p class="section-subtitle">Handpicked products that our customers love</p>
+  </div>
+  
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <mat-spinner class="spinner"></mat-spinner>
+    </div>
+  }
+  
+  <!-- Error State -->
+  @else if (error) {
+    <div class="error-container">
+      <h3 class="error-message">{{ error }}</h3>
+      <p>Please try again later or contact support if the problem persists.</p>
+    </div>
+  }
+  
+  <!-- Featured Products Grid -->
+  @else {
+    <div class="featured-grid">
+      @for (product of products; track product.id) {
+        <mat-card class="featured-card">
+          <img 
+            mat-card-image 
+            class="featured-image"
+            [src]="product.imageUrl" 
+            [alt]="product.name"
+            (error)="onImageError($event)">
+          
+          <mat-card-content class="featured-content">
+            <h3 class="featured-name">{{ product.name }}</h3>
+            <p class="featured-description">{{ product.description }}</p>
+            <p class="featured-price">${{ product.price | number:'1.2-2' }}</p>
+            <button class="featured-btn">Add to Cart</button>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</section>
+
+<!-- Promotional Section -->
+<section class="promo-section">
+  <div class="promo-container">
+    <h2 class="promo-title">Why Choose SURE Store?</h2>
+    <p class="promo-subtitle">We're committed to providing the best shopping experience with quality products and exceptional service</p>
+    
+    <div class="promo-features">
+      <div class="promo-feature">
+        <div class="feature-icon">🚚</div>
+        <h3 class="feature-title">Fast Shipping</h3>
+        <p class="feature-description">Get your products delivered quickly with our reliable shipping service</p>
+      </div>
+      
+      <div class="promo-feature">
+        <div class="feature-icon">🛡️</div>
+        <h3 class="feature-title">Secure Shopping</h3>
+        <p class="feature-description">Shop with confidence knowing your data is protected</p>
+      </div>
+      
+      <div class="promo-feature">
+        <div class="feature-icon">💎</div>
+        <h3 class="feature-title">Quality Products</h3>
+        <p class="feature-description">We only sell products that meet our high quality standards</p>
+      </div>
+      
+      <div class="promo-feature">
+        <div class="feature-icon">🎯</div>
+        <h3 class="feature-title">Best Prices</h3>
+        <p class="feature-description">Find competitive prices and great deals on all our products</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+  <div class="newsletter-container">
+    <h2 class="newsletter-title">Stay Updated</h2>
+    <p class="newsletter-subtitle">Subscribe to our newsletter and be the first to know about new products, special offers, and exclusive deals!</p>
+    
+    <form class="newsletter-form">
+      <input 
+        type="email" 
+        class="newsletter-input" 
+        placeholder="Enter your email address"
+        required>
+      <button type="submit" class="newsletter-btn">Subscribe</button>
+    </form>
+  </div>
+</section>

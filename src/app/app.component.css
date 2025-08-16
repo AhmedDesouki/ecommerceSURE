@@ -1,0 +1,5 @@
+main {
+  padding: 20px;
+  padding-bottom: 80px; /* To prevent footer from covering content */
+  min-height: calc(100vh - 120px);
+}
