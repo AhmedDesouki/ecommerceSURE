@@ -1,0 +1,47 @@
+<section class="cart">
+  <h2>Shopping Cart</h2>
+
+  <div *ngIf="loading()" class="muted">Loading...</div>
+  <div *ngIf="!loading() && items().length === 0" class="muted">Your cart is empty.</div>
+  <div *ngIf="error()" class="error">{{ error() }}</div>
+
+  <div *ngIf="!loading() && items().length > 0" class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th class="right">Price</th>
+          <th class="center">Quantity</th>
+          <th class="right">Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of items(); trackBy: trackById">
+          <td class="name">{{ item.productName }}</td>
+          <td class="right">{{ item.price | number:'1.2-2' }}</td>
+          <td class="center">
+            <div class="qty">
+              <button (click)="dec(item)">-</button>
+              <input [value]="item.quantity" (change)="onQtyChange(item, $any($event.target).value)" />
+              <button (click)="inc(item)">+</button>
+            </div>
+          </td>
+          <td class="right strong">{{ item.subTotal | number:'1.2-2' }}</td>
+          <td class="center">
+            <button class="danger" (click)="remove(item)">Remove</button>
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <td colspan="3" class="right strong total-label">Total</td>
+          <td class="right strong total-value">{{ total() | number:'1.2-2' }}</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</section>

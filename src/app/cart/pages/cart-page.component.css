@@ -1,0 +1,93 @@
+.cart {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 12px;
+}
+
+h2 {
+  font-size: 22px;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.muted {
+  color: #6b7280;
+}
+
+.error {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+  .table th, .table td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+}
+
+.name {
+  font-weight: 500;
+}
+
+.qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+  .qty input {
+    width: 60px;
+    text-align: center;
+    padding: 6px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+  }
+
+button {
+  padding: 6px 10px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+  button:hover {
+    background: #f3f4f6;
+  }
+
+  button.danger {
+    border-color: #ef4444;
+    color: #ef4444;
+  }
+
+.strong {
+  font-weight: 700;
+}
+
+.total-label {
+  font-weight: 600;
+}
+
+.total-value {
+  font-weight: 800;
+  font-size: 1.1rem;
+}
