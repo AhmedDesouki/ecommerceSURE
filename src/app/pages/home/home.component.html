@@ -59,23 +59,16 @@
     <p class="section-subtitle">Handpicked products that our customers love</p>
   </div>
   
-  <!-- Loading State -->
   @if (isLoading) {
     <div class="loading-container">
       <mat-spinner class="spinner"></mat-spinner>
     </div>
-  }
-  
-  <!-- Error State -->
-  @else if (error) {
+  } @else if (error) {
     <div class="error-container">
       <h3 class="error-message">{{ error }}</h3>
       <p>Please try again later or contact support if the problem persists.</p>
     </div>
-  }
-  
-  <!-- Featured Products Grid -->
-  @else {
+  } @else {
     <div class="featured-grid">
       @for (product of products; track product.id) {
         <mat-card class="featured-card">
