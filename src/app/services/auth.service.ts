@@ -42,6 +42,7 @@ export class AuthService {
 
   constructor(private router: Router) {
     this.loadStoredUser();
+    
   }
 
   private loadStoredUser(): void {
@@ -88,6 +89,9 @@ export class AuthService {
     }
   }
 
+
+
+  
   login(token: string, user: User): void {
     localStorage.setItem(this.tokenKey, token);
     localStorage.setItem(this.userKey, JSON.stringify(user));

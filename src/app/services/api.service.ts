@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, catchError, throwError } from 'rxjs';
 import { LoginCredentials, AuthResponse } from './auth.service';
+import { AuthService } from './auth.service';  
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +11,14 @@ import { LoginCredentials, AuthResponse } from './auth.service';
 export class ApiService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {
-    console.log('ApiService constructor called, apiUrl:', this.apiUrl);
-  }
+  constructor(private http: HttpClient, private authService: AuthService) {  
+  console.log('ApiService constructor called, apiUrl:', this.apiUrl);  
+}
+//helper fun to get header
+private getAuthHeaders(): { [key: string]: string } {  
+  const token = this.authService.getToken();  
+  return token ? { Authorization: `Bearer ${token}` } : {};  
+}
 
   // Authentication methods
   login(credentials: LoginCredentials): Observable<AuthResponse> {
@@ -74,41 +80,44 @@ export class ApiService {
   }
 
   // Admin methods for product management
-  createProduct(productData: any): Observable<any> {
-    const endpoint = `${this.apiUrl}/api/Products`;
-    console.log('ApiService.createProduct() called, endpoint:', endpoint);
+  createProduct(productData: any): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Products`;  
+  const headers = this.getAuthHeaders();  
+  console.log('ApiService.createProduct() called, endpoint:', endpoint);  
     
-    return this.http.post(endpoint, productData).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('ApiService.createProduct() error:', error);
-        return throwError(() => error);
-      })
-    );
-  }
+  return this.http.post(endpoint, productData, { headers }).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.createProduct() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}
 
-  updateProduct(productId: number, productData: any): Observable<any> {
-    const endpoint = `${this.apiUrl}/api/Products/${productId}`;
-    console.log('ApiService.updateProduct() called, endpoint:', endpoint);
+updateProduct(productId: number, productData: any): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Products/${productId}`;  
+  const headers = this.getAuthHeaders();  
+  console.log('ApiService.updateProduct() called, endpoint:', endpoint);  
     
-    return this.http.put(endpoint, productData).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('ApiService.updateProduct() error:', error);
-        return throwError(() => error);
-      })
-    );
-  }
+  return this.http.put(endpoint, productData, { headers }).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.updateProduct() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}
 
-  deleteProduct(productId: number): Observable<any> {
-    const endpoint = `${this.apiUrl}/api/Products/${productId}`;
-    console.log('ApiService.deleteProduct() called, endpoint:', endpoint);
+  deleteProduct(productId: number): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Products/${productId}`;  
+  const headers = this.getAuthHeaders();  
+  console.log('ApiService.deleteProduct() called, endpoint:', endpoint);  
     
-    return this.http.delete(endpoint).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('ApiService.deleteProduct() error:', error);
-        return throwError(() => error);
-      })
-    );
-  }
+  return this.http.delete(endpoint, { headers }).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.deleteProduct() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}
 
   getCategories(): Observable<any> {
     const endpoint = `${this.apiUrl}/api/Products/categories`;
