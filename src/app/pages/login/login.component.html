@@ -2,26 +2,75 @@
   <mat-card class="login-card">
     <mat-card-header>
       <mat-card-title>Login</mat-card-title>
+      <mat-card-subtitle>Sign in to your account</mat-card-subtitle>
     </mat-card-header>
     
     <mat-card-content>
-      <form (ngSubmit)="login()">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
-          <input matInput type="email" [(ngModel)]="credentials.email" name="email" required>
+          <input matInput type="email" formControlName="email" required>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+            Please enter a valid email
+          </mat-error>
         </mat-form-field>
         
         <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
-          <input matInput type="password" [(ngModel)]="credentials.password" name="password" required>
+          <input matInput type="password" formControlName="password" required>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            Password is required
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('minlength')">
+            Password must be at least 6 characters
+          </mat-error>
         </mat-form-field>
         
         @if (error) {
-          <div class="error">{{ error }}</div>
+          <div class="error-message">{{ error }}</div>
         }
         
-        <button mat-raised-button color="primary" type="submit">Login</button>
+        <div class="button-group">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit" 
+            [disabled]="!loginForm.valid || isLoading">
+            @if (isLoading) {
+              <mat-spinner diameter="20"></mat-spinner>
+            } @else {
+              Login
+            }
+          </button>
+        </div>
       </form>
+
+      <!-- Demo Login Buttons -->
+      <div class="demo-section">
+        <h3>Demo Login</h3>
+        <p>Click below to test with demo accounts:</p>
+        
+        <div class="demo-buttons">
+          <button 
+            mat-stroked-button 
+            color="accent" 
+            (click)="loginAsAdmin()"
+            [disabled]="isLoading">
+            Login as Admin
+          </button>
+          
+          <button 
+            mat-stroked-button 
+            color="primary" 
+            (click)="loginAsUser()"
+            [disabled]="isLoading">
+            Login as User
+          </button>
+        </div>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

@@ -17,9 +17,12 @@
       <a routerLink="/categories" routerLinkActive="active" class="nav-link">
         Categories
       </a>
-      <a routerLink="/admin/products" routerLinkActive="active" class="nav-link">
-        Admin
-      </a>
+      @if (isAdmin()) {
+        <a routerLink="/admin/products" routerLinkActive="active" class="nav-link admin-link">
+          <span class="admin-icon">⚙️</span>
+          Admin
+        </a>
+      }
       <a routerLink="/about" routerLinkActive="active" class="nav-link">
         About
       </a>
@@ -31,12 +34,20 @@
     <!-- User Section -->
     <div class="user-section">
       <!-- Authenticated User -->
-      @if (authService.isAuthenticated()) {
+      @if (isAuthenticated()) {
         <div class="user-menu">
-          <div class="user-avatar">
+          <div class="user-avatar" [class.admin-avatar]="isAdmin()">
             {{ getUserInitials() }}
+            @if (isAdmin()) {
+              <span class="admin-badge">A</span>
+            }
           </div>
-          <span class="user-name">{{ getUserName() }}</span>
+          <div class="user-info">
+            <span class="user-name">{{ getUserName() }}</span>
+            <span class="user-role" [class.admin-role]="isAdmin()">
+              {{ isAdmin() ? 'Administrator' : 'User' }}
+            </span>
+          </div>
         </div>
         <button class="btn btn-outline" (click)="logout()">
           Logout

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, User } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -11,6 +11,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  currentUser$ = this.authService.currentUser$;
+
   constructor(public authService: AuthService) {}
 
   logout(): void {
@@ -18,12 +20,23 @@ export class HeaderComponent {
   }
 
   getUserInitials(): string {
-    // For now, return a default initial. You can enhance this later
+    const user = this.authService.getCurrentUser();
+    if (user && user.name) {
+      return user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+    }
     return 'U';
   }
 
   getUserName(): string {
-    // For now, return a default name. You can enhance this later
-    return 'User';
+    const user = this.authService.getCurrentUser();
+    return user ? user.name : 'User';
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
   }
 }

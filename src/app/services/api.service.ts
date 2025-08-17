@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, catchError, throwError } from 'rxjs';
+import { LoginCredentials, AuthResponse } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,43 @@ export class ApiService {
 
   constructor(private http: HttpClient) {
     console.log('ApiService constructor called, apiUrl:', this.apiUrl);
+  }
+
+  // Authentication methods
+  login(credentials: LoginCredentials): Observable<AuthResponse> {
+    const endpoint = `${this.apiUrl}/api/Auth/login`;
+    console.log('ApiService.login() called, endpoint:', endpoint);
+    
+    return this.http.post<AuthResponse>(endpoint, credentials).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('ApiService.login() error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  register(userData: any): Observable<AuthResponse> {
+    const endpoint = `${this.apiUrl}/api/Auth/register`;
+    console.log('ApiService.register() called, endpoint:', endpoint);
+    
+    return this.http.post<AuthResponse>(endpoint, userData).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('ApiService.register() error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  refreshToken(token: string): Observable<any> {
+    const endpoint = `${this.apiUrl}/api/Auth/refresh`;
+    console.log('ApiService.refreshToken() called, endpoint:', endpoint);
+    
+    return this.http.post(endpoint, { token }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('ApiService.refreshToken() error:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   getProducts(): Observable<any> {
