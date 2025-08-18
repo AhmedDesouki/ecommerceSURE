@@ -1,0 +1,74 @@
+<div class="cart-container">  
+  <h1>Shopping Cart</h1>  
+    
+  @if (cartItems$ | async; as cartItems) {  
+    @if (cartItems.length === 0) {  
+      <div class="empty-cart">  
+        <h2>Your cart is empty</h2>  
+        <p>Add some products to get started!</p>  
+        <button mat-raised-button color="primary" routerLink="/">  
+          Continue Shopping  
+        </button>  
+      </div>  
+    } @else {  
+      <div class="cart-content">  
+        <div class="cart-items">  
+          @for (item of cartItems; track item.id) {  
+            <mat-card class="cart-item">  
+              <div class="item-image">  
+                <img [src]="item.imageUrl" [alt]="item.productName">  
+              </div>  
+              <div class="item-details">  
+                <h3>{{ item.productName }}</h3>  
+                <p class="item-price">${{ item.price | number:'1.2-2' }}</p>  
+              </div>  
+              <div class="item-quantity">  
+                <button mat-icon-button (click)="updateQuantity(item.productId, item.quantity - 1)">  
+                  <mat-icon>remove</mat-icon>  
+                </button>  
+                <span class="quantity">{{ item.quantity }}</span>  
+                <button mat-icon-button (click)="updateQuantity(item.productId, item.quantity + 1)">  
+                  <mat-icon>add</mat-icon>  
+                </button>  
+              </div>  
+              <div class="item-total">  
+                ${{ (item.price * item.quantity) | number:'1.2-2' }}  
+              </div>  
+              <div class="item-actions">  
+                <button mat-icon-button color="warn" (click)="removeItem(item.productId)">  
+                  <mat-icon>delete</mat-icon>  
+                </button>  
+              </div>  
+            </mat-card>  
+          }  
+        </div>  
+          
+        <div class="cart-summary">  
+          <mat-card>  
+            <mat-card-header>  
+              <mat-card-title>Order Summary</mat-card-title>  
+            </mat-card-header>  
+            <mat-card-content>  
+              <div class="summary-row">  
+                <span>Items ({{ cartItemCount }}):</span>  
+                <span>${{ cartTotal | number:'1.2-2' }}</span>  
+              </div>  
+              <div class="summary-row total">  
+                <span>Total:</span>  
+                <span>${{ cartTotal | number:'1.2-2' }}</span>  
+              </div>  
+            </mat-card-content>  
+            <mat-card-actions>  
+              <button mat-raised-button color="primary" class="checkout-btn">  
+                Proceed to Checkout  
+              </button>  
+              <button mat-button (click)="clearCart()">  
+                Clear Cart  
+              </button>  
+            </mat-card-actions>  
+          </mat-card>  
+        </div>  
+      </div>  
+    }  
+  }  
+</div>

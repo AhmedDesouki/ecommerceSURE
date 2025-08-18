@@ -25,7 +25,7 @@ export class ProductsComponent {
   // Pagination
   totalCount = 0;
   pageNumber = 1;
-  pageSize = 10;
+  pageSize = 20;
   totalPages = 0;
 
   constructor(private apiService: ApiService) {}

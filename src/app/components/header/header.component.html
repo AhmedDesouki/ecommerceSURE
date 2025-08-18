@@ -29,6 +29,16 @@
       <a routerLink="/contact" routerLinkActive="active" class="nav-link">
         Contact
       </a>
+       <!-- Cart Icon -->  
+      <a routerLink="/cart" routerLinkActive="active" class="nav-link cart-link">  
+        <div class="cart-icon-container">  
+          <span class="cart-icon">🛒</span>  
+          @if (cartItemCount > 0) {  
+            <span class="cart-badge">{{ cartItemCount }}</span>  
+          }  
+        </div>  
+        <span class="cart-text">Cart</span>  
+      </a>  
     </nav>
 
     <!-- User Section -->

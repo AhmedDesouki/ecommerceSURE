@@ -130,4 +130,58 @@ updateProduct(productId: number, productData: any): Observable<any> {
       })
     );
   }
+
+// Cart API methods  
+addToCart(cartData: any): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Cart`;  
+  const headers = this.getAuthHeaders();  
+  console.log('ApiService.addToCart() called, endpoint:', endpoint);  
+    
+  return this.http.post(endpoint, cartData, { headers }).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.addToCart() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}  
+  
+getCartItems(): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Cart`;  
+  const headers = this.getAuthHeaders();  
+  console.log('ApiService.getCartItems() called, endpoint:', endpoint);  
+    
+  return this.http.get(endpoint, { headers }).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.getCartItems() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}  
+  
+updateCartItem(itemId: number, quantity: number): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Cart/${itemId}`;  
+  const headers = this.getAuthHeaders();  
+  console.log('ApiService.updateCartItem() called, endpoint:', endpoint);  
+    
+  return this.http.put(endpoint, { quantity }, { headers }).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.updateCartItem() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}  
+  
+removeFromCart(itemId: number): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Cart/${itemId}`;  
+  const headers = this.getAuthHeaders();  
+  console.log('ApiService.removeFromCart() called, endpoint:', endpoint);  
+    
+  return this.http.delete(endpoint, { headers }).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.removeFromCart() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}
+
 }
