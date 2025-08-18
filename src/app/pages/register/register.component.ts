@@ -63,8 +63,18 @@ export class RegisterComponent {
       this.isLoading = true;
       this.error = '';
 
-      const userData = this.registerForm.value;
-      delete userData.confirmPassword; // Remove confirmPassword before sending
+      //const userData = this.registerForm.value;
+      //delete userData.confirmPassword; // Remove confirmPassword before sending
+      const payload = [
+      ['fullName', this.registerForm.value.name],
+      ['email', this.registerForm.value.email],
+      ['password', this.registerForm.value.password],
+      ['confirmPassword', this.registerForm.value.confirmPassword], // Explicitly last
+    ];
+
+    // Convert back to an object (but order is not guaranteed in JS objects)
+    const userData = Object.fromEntries(payload);
+    console.log(JSON.stringify(userData, null, 2));
 
       this.apiService.register(userData).subscribe({
         next: (response) => {
