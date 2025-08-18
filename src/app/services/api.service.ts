@@ -184,4 +184,45 @@ removeFromCart(itemId: number): Observable<any> {
   );  
 }
 
+// Order API methods  
+createOrder(orderData: any): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Orders`;  
+  const headers = this.getAuthHeaders();  
+  console.log('ApiService.createOrder() called, endpoint:', endpoint);  
+    
+  return this.http.post(endpoint, orderData, { headers }).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.createOrder() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}  
+  
+getOrders(): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Orders`;  
+  const headers = this.getAuthHeaders();  
+  console.log('ApiService.getOrders() called, endpoint:', endpoint);  
+    
+  return this.http.get(endpoint, { headers }).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.getOrders() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}  
+  
+getOrderById(orderId: number): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Orders/${orderId}`;  
+  const headers = this.getAuthHeaders();  
+  console.log('ApiService.getOrderById() called, endpoint:', endpoint);  
+    
+  return this.http.get(endpoint, { headers }).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.getOrderById() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}
+
+
 }
