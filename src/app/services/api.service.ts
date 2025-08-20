@@ -119,17 +119,57 @@ updateProduct(productId: number, productData: any): Observable<any> {
   );  
 }
 
-  getCategories(): Observable<any> {
-    const endpoint = `${this.apiUrl}/api/Categorie`;
-    console.log('ApiService.getCategories() called, endpoint:', endpoint);
+  getCategories(): Observable<any> {  
+  const endpoint = `${this.apiUrl}/api/Categories`;  
+  console.log('ApiService.getCategories() called, endpoint:', endpoint);  
     
-    return this.http.get(endpoint).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('ApiService.getCategories() error:', error);
-        return throwError(() => error);
-      })
-    );
-  }
+  return this.http.get(endpoint).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.getCategories() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}  
+  
+getProductsByCategory(categoryId?: number): Observable<any> {  
+  let endpoint = `${this.apiUrl}/api/Products`;  
+  if (categoryId) {  
+    endpoint += `?categoryId=${categoryId}`;  
+  }  
+  console.log('ApiService.getProductsByCategory() called, endpoint:', endpoint);  
+    
+  return this.http.get(endpoint).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.getProductsByCategory() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}
+
+searchProducts(searchTerm?: string, categoryId?: number): Observable<any> {  
+  let endpoint = `${this.apiUrl}/api/Products`;  
+  const params = new URLSearchParams();  
+    
+  if (searchTerm) {  
+    params.append('search', searchTerm);  
+  }  
+  if (categoryId) {  
+    params.append('categoryId', categoryId.toString());  
+  }  
+    
+  if (params.toString()) {  
+    endpoint += `?${params.toString()}`;  
+  }  
+    
+  console.log('ApiService.searchProducts() called, endpoint:', endpoint);  
+    
+  return this.http.get(endpoint).pipe(  
+    catchError((error: HttpErrorResponse) => {  
+      console.error('ApiService.searchProducts() error:', error);  
+      return throwError(() => error);  
+    })  
+  );  
+}
 
 // Cart API methods  
 addToCart(cartData: any): Observable<any> {  

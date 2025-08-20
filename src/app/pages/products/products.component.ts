@@ -1,187 +1,135 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
-import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-
-@Component({
-  selector: 'app-products',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatIconModule,
-    MatButtonModule,
-    MatChipsModule
-  ],
-  templateUrl: './products.component.html',
-  styleUrls: ['./products.component.css']
-})
-export class ProductsComponent implements OnInit {
-  products: any[] = [];
-  allProducts: any[] = []; // Store all products for filtering
-  categories: any[] = [];
-  isLoading = true;
-  error: string | null = null;
+import { Component, OnInit } from '@angular/core';  
+import { CommonModule } from '@angular/common';  
+import { MatCardModule } from '@angular/material/card';  
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';  
+import { MatSelectModule } from '@angular/material/select';  
+import { MatFormFieldModule } from '@angular/material/form-field';  
+import { MatButtonModule } from '@angular/material/button';  
+import { MatSnackBar } from '@angular/material/snack-bar';  
+import { ApiService } from '../../services/api.service';  
+import { CartService } from '../../services/cart.service';  
+import { AuthService } from '../../services/auth.service';  
+import { FormControl, ReactiveFormsModule } from '@angular/forms';  
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';  
   
-  // Search and Filter
-  searchControl = new FormControl('');
-  selectedCategory = new FormControl('');
-  selectedCategories: string[] = [];
+@Component({  
+  selector: 'app-products',  
+  standalone: true,  
+  imports: [  
+    CommonModule,  
+    MatCardModule,  
+    MatProgressSpinnerModule,  
+    MatSelectModule,  
+    MatFormFieldModule,  
+    MatButtonModule ,
+    ReactiveFormsModule  
+  ],  
+  templateUrl: './products.component.html',  
+  styleUrls: ['./products.component.css']  
+})  
+export class ProductsComponent implements OnInit {  
+  products: any[] = [];  
+  categories: any[] = [];  
+  selectedCategoryId: number | null = null;  
+  isLoading = true;  
+  error: string | null = null;  
+  totalCount = 0;  
+  pageNumber = 1;  
+  pageSize = 20;  
+  totalPages = 1;  
+searchControl = new FormControl('');  
+searchTerm: string = '';  
+  constructor(  
+    private apiService: ApiService,  
+    private cartService: CartService,  
+    private authService: AuthService,  
+    private snackBar: MatSnackBar  
+  ) {}  
   
-  // Pagination
-  totalCount = 0;
-  pageNumber = 1;
-  pageSize = 20;
-  totalPages = 0;
+  ngOnInit() {  
+    this.loadCategories();  
+    this.loadProducts();  
 
-  // Search debounce
-  private searchSubject = new Subject<string>();
+      // Setup search functionality with debounce  
+  this.searchControl.valueChanges.pipe(  
+    debounceTime(300),  
+    distinctUntilChanged()  
+  ).subscribe(searchTerm => {  
+    this.searchTerm = searchTerm || '';  
+    this.performSearch();  
+  });  
+  }  
+  performSearch() {  
+  this.isLoading = true;  
+  this.apiService.searchProducts(this.searchTerm, this.selectedCategoryId || undefined).subscribe({  
+    next: (response) => {  
+      this.products = response.products || [];  
+      this.totalCount = response.totalCount || 0;  
+      this.pageNumber = response.pageNumber || 1;  
+      this.pageSize = response.pageSize || 20;  
+      this.totalPages = response.totalPages || 1;  
+      this.isLoading = false;  
+    },  
+    error: (err) => {  
+      this.error = 'Failed to search products';  
+      this.isLoading = false;  
+      console.error('Error searching products:', err);  
+    }  
+  });  
+}  
 
-  constructor(private apiService: ApiService) {}
-
-  ngOnInit() {
-    this.setupSearchListener();
-    this.loadCategories();
-    this.loadProducts();
-  }
-
-  private setupSearchListener() {
-    this.searchSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(searchTerm => {
-      this.applyFilters();
-    });
-  }
-
-  loadProducts() {
-    this.isLoading = true;
-    this.apiService.getProducts().subscribe({
-      next: (response) => {
-        console.log('Products response:', response);
-        this.allProducts = response.products || response;
-        this.totalCount = this.allProducts.length;
-        this.pageNumber = 1;
-        this.pageSize = 20;
-        this.totalPages = Math.ceil(this.totalCount / this.pageSize);
-        
-
-        
-        this.applyFilters();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Failed to load products:', err);
-        this.error = 'Failed to load products';
-        this.isLoading = false;
-      }
-    });
-  }
-
-  loadCategories() {
-    this.apiService.getCategories().subscribe({
-      next: (response) => {
-        console.log('Categories response:', response);
-        this.categories = response || [];
-      },
-      error: (err) => {
-        console.error('Failed to load categories:', err);
-        this.categories = [];
-      }
-    });
-  }
-
-  onPageChange(event: PageEvent) {
-    this.pageNumber = event.pageIndex + 1;
-    this.pageSize = event.pageSize;
-    this.updatePagination();
-  }
-
-  // Search and Filter Methods
-  onSearchChange() {
-    this.searchSubject.next(this.searchControl.value || '');
-  }
-
-  onCategoryChange() {
-    this.applyFilters();
-  }
-
-  toggleCategory(category: string) {
-    const index = this.selectedCategories.indexOf(category);
-    if (index > -1) {
-      this.selectedCategories.splice(index, 1);
-    } else {
-      this.selectedCategories.push(category);
-    }
-    this.applyFilters();
-  }
-
-  clearFilters() {
-    this.searchControl.setValue('');
-    this.selectedCategories = [];
-    this.selectedCategory.setValue('');
-    this.applyFilters();
-  }
-
-  private applyFilters() {
-    let filteredProducts = [...this.allProducts];
-
-    // Apply search filter
-    const searchTerm = this.searchControl.value?.toLowerCase().trim();
-    if (searchTerm) {
-      filteredProducts = filteredProducts.filter(product =>
-        product.name?.toLowerCase().includes(searchTerm) ||
-        product.description?.toLowerCase().includes(searchTerm)
-      );
-    }
-
-    // Apply category filter
-    if (this.selectedCategories.length > 0) {
-      filteredProducts = filteredProducts.filter(product =>
-        this.selectedCategories.includes(product.categoryName)
-      );
-    }
-
-    this.products = filteredProducts;
-    this.totalCount = this.products.length;
-    this.pageNumber = 1;
-    this.totalPages = Math.ceil(this.totalCount / this.pageSize);
-  }
-
-  private updatePagination() {
-    // This method is called when pagination changes
-    // The actual pagination is handled by the getter
-  }
-
-  get paginatedProducts() {
-    const startIndex = (this.pageNumber - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    return this.products.slice(startIndex, endIndex);
-  }
-
-  // Make Math available in template
-  Math = Math;
-
-  onImageError(event: Event): void {
-    const img = event.target as HTMLImageElement;
-    img.src = 'https://via.placeholder.com/300x250/667eea/ffffff?text=No+Image';
-  }
+// Add clear search method  
+clearSearch() {  
+  this.searchControl.setValue('');  
+  this.searchTerm = '';  
+  this.performSearch();  
+}
+  loadCategories() {  
+    this.apiService.getCategories().subscribe({  
+      next: (response) => {  
+        this.categories = response || [];  
+      },  
+      error: (err) => {  
+        console.error('Error loading categories:', err);  
+      }  
+    });  
+  }  
+  
+  loadProducts(categoryId?: number) {  
+    this.isLoading = true;  
+    this.selectedCategoryId = categoryId || null;  
+    this.performSearch();  
+    this.apiService.getProductsByCategory(categoryId).subscribe({  
+      next: (response) => {  
+        this.products = response.products || [];  
+        this.totalCount = response.totalCount || 0;  
+        this.pageNumber = response.pageNumber || 1;  
+        this.pageSize = response.pageSize || 20;  
+        this.totalPages = response.totalPages || 1;  
+        this.isLoading = false;  
+      },  
+      error: (err) => {  
+        this.error = 'Failed to load products';  
+        this.isLoading = false;  
+        console.error('Error loading products:', err);  
+      }  
+    });  
+  }  
+  
+  onCategoryChange(categoryId: number | null) {  
+    this.selectedCategoryId = categoryId;  
+    this.selectedCategoryId = categoryId;  
+    this.performSearch();  
+    this.loadProducts(categoryId || undefined);  
+  }  
+  
+  addToCart(product: any) {  
+    this.cartService.addToCart(product, 1);  
+    this.snackBar.open(`${product.name} added to cart!`, 'Close', { duration: 3000 });  
+  }  
+  
+  onImageError(event: Event): void {  
+    const img = event.target as HTMLImageElement;  
+    img.src = 'https://via.placeholder.com/300x250/667eea/ffffff?text=No+Image';  
+  }  
 }
