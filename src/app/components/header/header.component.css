@@ -227,6 +227,12 @@
   font-weight: 600;
 }
 
+.user-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 .mobile-menu-toggle {
   display: none;
   background: none;
@@ -263,6 +269,10 @@
     gap: 10px;
   }
   
+  .user-actions {
+    gap: 8px;
+  }
+  
   .btn {
     padding: 8px 15px;
     font-size: 0.8rem;
@@ -285,6 +295,11 @@
   .auth-buttons {
     flex-direction: column;
     gap: 8px;
+  }
+  
+  .user-actions {
+    flex-direction: column;
+    gap: 6px;
   }
   
   .btn {

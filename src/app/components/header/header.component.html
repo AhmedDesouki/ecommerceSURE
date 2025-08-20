@@ -59,9 +59,12 @@
             </span>
           </div>
         </div>
-        <button class="btn btn-outline" (click)="logout()">
-          Logout
-        </button>
+        <div class="user-actions">
+          <a routerLink="/profile" class="btn btn-outline">Profile</a>
+          <button class="btn btn-outline" (click)="logout()">
+            Logout
+          </button>
+        </div>
       } @else {
         <!-- Guest User -->
         <div class="auth-buttons">
