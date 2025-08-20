@@ -1,0 +1,127 @@
+<div class="container">
+  <!-- Back Button -->
+  <div class="back-button-container">
+    <button mat-stroked-button (click)="goBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Products
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner class="spinner"></mat-spinner>
+    <p>Loading product details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <mat-icon class="error-icon">error</mat-icon>
+    <h2 class="error-message">{{ error }}</h2>
+    <p>Please try again later or contact support if the problem persists.</p>
+    <button mat-raised-button color="primary" (click)="loadProduct(product?.id)">
+      <mat-icon>refresh</mat-icon>
+      Retry
+    </button>
+  </div>
+
+  <!-- Product Details -->
+  <div *ngIf="!isLoading && !error && product" class="product-detail-container">
+    <div class="product-images-section">
+      <!-- Main Image -->
+      <div class="main-image-container">
+        <img 
+          [src]="product.imageUrl" 
+          [alt]="product.name"
+          (error)="onImageError($event)"
+          class="main-image"
+        />
+      </div>
+    </div>
+
+    <div class="product-info-section">
+      <!-- Product Header -->
+      <div class="product-header">
+        <h1 class="product-title">{{ product.name }}</h1>
+        <div class="product-meta">
+          <mat-chip-set>
+            <mat-chip color="primary" variant="outlined">{{ product.categoryName }}</mat-chip>
+            <mat-chip *ngIf="product.brand" color="accent" variant="outlined">{{ product.brand }}</mat-chip>
+          </mat-chip-set>
+        </div>
+      </div>
+
+      <!-- Price and Stock -->
+      <div class="price-stock-section">
+        <div class="price-container">
+          <span class="price-label">Price:</span>
+          <span class="price">${{ product.price | number:'1.2-2' }}</span>
+          <span *ngIf="product.originalPrice && product.originalPrice > product.price" class="original-price">
+            ${{ product.originalPrice | number:'1.2-2' }}
+          </span>
+        </div>
+        
+        <div class="stock-container">
+          <div class="stock-status" [ngClass]="{
+            'in-stock': product.stockQuantity > 20,
+            'low-stock': product.stockQuantity > 0 && product.stockQuantity <= 20,
+            'out-of-stock': product.stockQuantity <= 0
+          }">
+            <mat-icon>
+              {{ product.stockQuantity > 20 ? 'check_circle' : 
+                 product.stockQuantity > 0 ? 'warning' : 'cancel' }}
+            </mat-icon>
+            <span>
+              {{ product.stockQuantity > 20 ? 'In Stock' : 
+                 product.stockQuantity > 0 ? 'Low Stock (' + product.stockQuantity + ' left)' : 
+                 'Out of Stock' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="description-section">
+        <h3>Description</h3>
+        <p class="product-description">{{ product.description }}</p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          size="large"
+          class="add-to-cart-btn"
+          (click)="addToCart()"
+          [disabled]="product.stockQuantity <= 0">
+          <mat-icon>add_shopping_cart</mat-icon>
+          {{ product.stockQuantity > 0 ? 'Add to Cart' : 'Out of Stock' }}
+        </button>
+        
+        <button 
+          mat-stroked-button 
+          size="large"
+          class="wishlist-btn">
+          <mat-icon>favorite_border</mat-icon>
+          Add to Wishlist
+        </button>
+      </div>
+
+      <!-- Additional Info -->
+      <div class="additional-info">
+        <div class="info-item">
+          <mat-icon>local_shipping</mat-icon>
+          <span>Free shipping on orders over $50</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>security</mat-icon>
+          <span>Secure payment processing</span>
+        </div>
+        <div class="info-item">
+          <mat-icon>return</mat-icon>
+          <span>30-day return policy</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

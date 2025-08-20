@@ -49,37 +49,47 @@ export class RegisterComponent {
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
     const confirmPassword = form.get('confirmPassword');
-    
+
     if (password && confirmPassword && password.value !== confirmPassword.value) {
       confirmPassword.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
-    
+
     return null;
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
-      this.isLoading = true;
-      this.error = '';
+  if (this.registerForm.valid) {
+    this.isLoading = true;
+    this.error = '';
 
-      const userData = this.registerForm.value;
-      delete userData.confirmPassword; // Remove confirmPassword before sending
+    const userData = {
+      fullName: this.registerForm.get('name')?.value,  // Make sure it's fullName
+      email: this.registerForm.get('email')?.value,
+      password: this.registerForm.get('password')?.value,
+      confirmPassword: this.registerForm.get('confirmPassword')?.value
+    };
+    console.log('Form Data:', userData); // Log data to check
 
-      this.apiService.register(userData).subscribe({
-        next: (response) => {
-          this.authService.setAuthData(response);
-          this.snackBar.open('Registration successful! Welcome!', 'Close', { duration: 3000 });
-          this.router.navigate(['/']);
-        },
-        error: (err) => {
-          console.error('Registration failed:', err);
+    this.apiService.register(userData).subscribe({
+      next: (response) => {
+        this.authService.setAuthData(response);
+        this.snackBar.open('Registration successful! Welcome!', 'Close', { duration: 3000 });
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Registration failed:', err);
+        if (err.error.errors) {
+          this.error = Object.values(err.error.errors).flat().join(', ');
+        } else {
           this.error = 'Registration failed. Please try again.';
-          this.isLoading = false;
         }
-      });
-    } else {
-      this.error = 'Please fill in all fields correctly';
-    }
+        this.isLoading = false;
+      }
+    });
+  } else {
+    this.error = 'Please fill in all fields correctly';
   }
+}
+
 }

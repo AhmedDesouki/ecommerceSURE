@@ -6,17 +6,23 @@ import { RegisterComponent } from './pages/register/register.component';
 import { AdminProductsComponent } from './pages/admin/admin-products/admin-products.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/auth.guard';
-import { CartComponent } from './pages/cart/cart.component';  
+import { CartComponent } from './pages/cart/cart.component';
+import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
+import { CategoryComponent } from './pages/category/category.component';
+
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'products', component: ProductsComponent },
+  { path: 'products/:categoryId', component: ProductsComponent },
+  { path: 'product/:id', component: ProductDetailComponent },
+  { path: 'categories', component: CategoryComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { 
-    path: 'admin/products', 
+  {
+    path: 'admin/products',
     component: AdminProductsComponent,
     canActivate: [AdminGuard]
   },
-   { path: 'cart', component: CartComponent },  
+  { path: 'cart', component: CartComponent },
   { path: '**', redirectTo: '' }
 ];

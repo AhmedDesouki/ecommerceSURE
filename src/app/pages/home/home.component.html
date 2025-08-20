@@ -10,47 +10,7 @@
   </div>
 </section>
 
-<!-- Categories Section -->
-<section class="categories-section">
-  <div class="section-header">
-    <h2 class="section-title">Shop by Category</h2>
-    <p class="section-subtitle">Explore our wide range of product categories and find what suits your style</p>
-  </div>
-  
-  <div class="categories-grid">
-    <div class="category-card" routerLink="/products">
-      <div class="category-image">📱</div>
-      <div class="category-content">
-        <h3 class="category-name">Electronics</h3>
-        <p class="category-description">Latest smartphones, laptops, and gadgets</p>
-      </div>
-    </div>
-    
-    <div class="category-card" routerLink="/products">
-      <div class="category-image">👕</div>
-      <div class="category-content">
-        <h3 class="category-name">Fashion</h3>
-        <p class="category-description">Trendy clothing and accessories</p>
-      </div>
-    </div>
-    
-    <div class="category-card" routerLink="/products">
-      <div class="category-image">📚</div>
-      <div class="category-content">
-        <h3 class="category-name">Books</h3>
-        <p class="category-description">Best-selling books and literature</p>
-      </div>
-    </div>
-    
-    <div class="category-card" routerLink="/products">
-      <div class="category-image">🏠</div>
-      <div class="category-content">
-        <h3 class="category-name">Home & Garden</h3>
-        <p class="category-description">Everything for your perfect home</p>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- Featured Products Section -->
 <section class="featured-section">
@@ -58,7 +18,7 @@
     <h2 class="section-title">Featured Products</h2>
     <p class="section-subtitle">Handpicked products that our customers love</p>
   </div>
-  
+
   @if (isLoading) {
     <div class="loading-container">
       <mat-spinner class="spinner"></mat-spinner>
@@ -72,13 +32,13 @@
     <div class="featured-grid">
       @for (product of products; track product.id) {
         <mat-card class="featured-card">
-          <img 
-            mat-card-image 
+          <img
+            mat-card-image
             class="featured-image"
-            [src]="product.imageUrl" 
+            [src]="product.imageUrl"
             [alt]="product.name"
             (error)="onImageError($event)">
-          
+
           <mat-card-content class="featured-content">
             <h3 class="featured-name">{{ product.name }}</h3>
             <p class="featured-description">{{ product.description }}</p>
@@ -96,26 +56,26 @@
   <div class="promo-container">
     <h2 class="promo-title">Why Choose SURE Store?</h2>
     <p class="promo-subtitle">We're committed to providing the best shopping experience with quality products and exceptional service</p>
-    
+
     <div class="promo-features">
       <div class="promo-feature">
         <div class="feature-icon">🚚</div>
         <h3 class="feature-title">Fast Shipping</h3>
         <p class="feature-description">Get your products delivered quickly with our reliable shipping service</p>
       </div>
-      
+
       <div class="promo-feature">
         <div class="feature-icon">🛡️</div>
         <h3 class="feature-title">Secure Shopping</h3>
         <p class="feature-description">Shop with confidence knowing your data is protected</p>
       </div>
-      
+
       <div class="promo-feature">
         <div class="feature-icon">💎</div>
         <h3 class="feature-title">Quality Products</h3>
         <p class="feature-description">We only sell products that meet our high quality standards</p>
       </div>
-      
+
       <div class="promo-feature">
         <div class="feature-icon">🎯</div>
         <h3 class="feature-title">Best Prices</h3>
@@ -130,11 +90,11 @@
   <div class="newsletter-container">
     <h2 class="newsletter-title">Stay Updated</h2>
     <p class="newsletter-subtitle">Subscribe to our newsletter and be the first to know about new products, special offers, and exclusive deals!</p>
-    
+
     <form class="newsletter-form">
-      <input 
-        type="email" 
-        class="newsletter-input" 
+      <input
+        type="email"
+        class="newsletter-input"
         placeholder="Enter your email address"
         required>
       <button type="submit" class="newsletter-btn">Subscribe</button>

@@ -1,0 +1,61 @@
+<div class="container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>Product Categories</h1>
+    <p>Browse our products by category to find exactly what you're looking for</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner class="spinner"></mat-spinner>
+    <p>Loading categories...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <mat-icon class="error-icon">error</mat-icon>
+    <h2 class="error-message">{{ error }}</h2>
+    <p>Please try again later or contact support if the problem persists.</p>
+    <button mat-raised-button color="primary" (click)="retryLoad()">
+      <mat-icon>refresh</mat-icon>
+      Retry
+    </button>
+  </div>
+
+  <!-- Categories Grid -->
+  <div *ngIf="!isLoading && !error" class="categories-grid">
+    <mat-card
+      *ngFor="let category of categories"
+      class="category-card"
+      (click)="onCategoryClick(category.id)"
+    >
+      <div class="category-icon-container">
+        <mat-icon class="category-icon" [class]="getCategoryIconClass(category.name)">
+          {{ getCategoryIcon(category.name) }}
+        </mat-icon>
+        <div class="category-overlay">
+          <mat-icon class="overlay-icon">arrow_forward</mat-icon>
+        </div>
+      </div>
+
+      <mat-card-content class="category-content">
+        <h3 class="category-name">{{ category.name }}</h3>
+        <p class="category-description" *ngIf="category.description">
+          {{ category.description }}
+        </p>
+        <div class="category-meta">
+          <span class="product-count" *ngIf="category.productCount">
+            {{ category.productCount }} products
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- No Categories Message -->
+  <div *ngIf="!isLoading && !error && categories.length === 0" class="no-categories">
+    <mat-icon class="no-categories-icon">category</mat-icon>
+    <h3>No categories found</h3>
+    <p>Categories will appear here once they are added to the system.</p>
+  </div>
+</div>

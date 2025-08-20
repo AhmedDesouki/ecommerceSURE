@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
@@ -9,24 +9,26 @@ import { CartService } from '../../services/cart.service';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule,MatIconModule, MatBadgeModule],
+  imports: [CommonModule, RouterModule, MatIconModule, MatBadgeModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   currentUser$ = this.authService.currentUser$;
-  cartItemCount = 0;  
+  cartItemCount = 0;
 
-  constructor(public authService: AuthService,  private cartService: CartService  ) {}
+  constructor(public authService: AuthService, private cartService: CartService) {}
+
+  ngOnInit() {
+    this.cartService.cartItems$.subscribe(items => {
+      this.cartItemCount = this.cartService.getCartItemCount();
+    });
+  }
 
   logout(): void {
     this.authService.logout();
   }
-   ngOnInit() {  
-    this.cartService.cartItems$.subscribe(items => {  
-      this.cartItemCount = this.cartService.getCartItemCount();  
-    });  
-  }  
+
   getUserInitials(): string {
     const user = this.authService.getCurrentUser();
     if (user && user.name) {

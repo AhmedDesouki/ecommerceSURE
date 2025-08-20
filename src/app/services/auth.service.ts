@@ -42,7 +42,7 @@ export class AuthService {
 
   constructor(private router: Router) {
     this.loadStoredUser();
-    
+
   }
 
   private loadStoredUser(): void {
@@ -62,7 +62,7 @@ export class AuthService {
   setAuthData(response: AuthResponse): void {
     // Extract role from JWT token
     const role = this.extractRoleFromToken(response.token);
-    
+
     // Map API response to internal User structure
     const user: User = {
       id: response.user.id,
@@ -91,7 +91,7 @@ export class AuthService {
 
 
 
-  
+
   login(token: string, user: User): void {
     localStorage.setItem(this.tokenKey, token);
     localStorage.setItem(this.userKey, JSON.stringify(user));
@@ -163,5 +163,5 @@ export class AuthService {
     this.login('demo-user-token', regularUser);
   }
 
-  
+
 }
