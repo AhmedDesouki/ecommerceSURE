@@ -7,30 +7,46 @@
 
   <!-- Search and Filter Section -->
   <div class="filters-section">
+    <!-- Debug Info -->
+    <div style="background: #f0f0f0; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+      <strong>Debug Info:</strong> Categories loaded: {{ categories.length }} | 
+      Categories: {{ categories.join(', ') }}
+    </div>
+
+    <!-- Test Material Components -->
+    <div style="background: #e8f5e8; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+      <strong>Material Components Test:</strong>
+      <button mat-raised-button color="primary" style="margin-right: 10px;">Test Button</button>
+      <mat-chip>Test Chip</mat-chip>
+    </div>
+
     <!-- Search Bar -->
     <div class="search-container">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search products...</mat-label>
+      <div class="search-field-simple">
         <input 
-          matInput 
+          type="text"
           [formControl]="searchControl"
           (input)="onSearchChange()"
-          placeholder="Search by name or description">
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
+          placeholder="Search products by name or description..."
+          class="search-input">
+        <span class="search-icon">🔍</span>
+      </div>
     </div>
 
     <!-- Category Filters -->
     <div class="category-filters">
-      <h3>Filter by Category</h3>
+      <h3>Filter by Category ({{ categories.length }} available)</h3>
       <div class="category-chips">
         @for (category of categories; track category) {
-          <mat-chip 
-            [selected]="selectedCategories.includes(category)"
+          <button 
+            [class.selected]="selectedCategories.includes(category)"
             (click)="toggleCategory(category)"
-            class="category-chip">
+            class="category-chip-simple">
             {{ category }}
-          </mat-chip>
+          </button>
+        }
+        @if (categories.length === 0) {
+          <p style="color: #666; font-style: italic;">No categories available</p>
         }
       </div>
     </div>
@@ -39,11 +55,9 @@
     @if (searchControl.value || selectedCategories.length > 0) {
       <div class="clear-filters">
         <button 
-          mat-stroked-button 
           (click)="clearFilters()"
-          class="clear-btn">
-          <mat-icon>clear</mat-icon>
-          Clear Filters
+          class="clear-btn-simple">
+          ✕ Clear Filters
         </button>
       </div>
     }
@@ -116,13 +130,12 @@
     } @else {
       <!-- No Results Message -->
       <div class="no-results">
-        <mat-icon class="no-results-icon">search_off</mat-icon>
+        <div class="no-results-icon">🔍</div>
         <h3>No products found</h3>
         <p>Try adjusting your search criteria or filters to find what you're looking for.</p>
         <button 
-          mat-stroked-button 
           (click)="clearFilters()"
-          class="clear-filters-btn">
+          class="clear-filters-btn-simple">
           Clear All Filters
         </button>
       </div>
