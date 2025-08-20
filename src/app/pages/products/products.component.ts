@@ -76,15 +76,25 @@ export class ProductsComponent implements OnInit {
     this.isLoading = true;
     this.apiService.getProducts().subscribe({
       next: (response) => {
+        console.log('Products response:', response);
         this.allProducts = response.products || response;
         this.totalCount = this.allProducts.length;
         this.pageNumber = 1;
         this.pageSize = 20;
         this.totalPages = Math.ceil(this.totalCount / this.pageSize);
+        
+        // If categories are still empty, try to extract from products
+        if (this.categories.length === 0 && this.allProducts.length > 0) {
+          const uniqueCategories = [...new Set(this.allProducts.map(p => p.categoryName).filter(Boolean))];
+          this.categories = uniqueCategories;
+          console.log('Extracted categories from products in loadProducts:', this.categories);
+        }
+        
         this.applyFilters();
         this.isLoading = false;
       },
       error: (err) => {
+        console.error('Failed to load products:', err);
         this.error = 'Failed to load products';
         this.isLoading = false;
       }
@@ -94,10 +104,27 @@ export class ProductsComponent implements OnInit {
   loadCategories() {
     this.apiService.getCategories().subscribe({
       next: (response) => {
+        console.log('Categories response:', response);
         this.categories = response || [];
+        
+        // If no categories from API, try to extract from products
+        if (this.categories.length === 0 && this.allProducts.length > 0) {
+          const uniqueCategories = [...new Set(this.allProducts.map(p => p.categoryName).filter(Boolean))];
+          this.categories = uniqueCategories;
+          console.log('Extracted categories from products:', this.categories);
+        }
+        
+        // Fallback categories if still empty
+        if (this.categories.length === 0) {
+          this.categories = ['Electronics', 'Clothing', 'Books', 'Home & Garden', 'Sports'];
+          console.log('Using fallback categories:', this.categories);
+        }
       },
       error: (err) => {
         console.error('Failed to load categories:', err);
+        // Fallback categories on error
+        this.categories = ['Electronics', 'Clothing', 'Books', 'Home & Garden', 'Sports'];
+        console.log('Using fallback categories due to error:', this.categories);
       }
     });
   }
