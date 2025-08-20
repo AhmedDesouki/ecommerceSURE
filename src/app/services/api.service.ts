@@ -120,7 +120,7 @@ updateProduct(productId: number, productData: any): Observable<any> {
 }
 
   getCategories(): Observable<any> {
-    const endpoint = `${this.apiUrl}/api/Products/categories`;
+    const endpoint = `${this.apiUrl}/api/Categorie`;
     console.log('ApiService.getCategories() called, endpoint:', endpoint);
     
     return this.http.get(endpoint).pipe(
