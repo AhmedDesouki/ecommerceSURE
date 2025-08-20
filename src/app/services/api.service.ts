@@ -211,7 +211,7 @@ getOrders(): Observable<any> {
   );  
 }  
   
-getOrderById(orderId: number): Observable<any> {  
+  getOrderById(orderId: number): Observable<any> {  
   const endpoint = `${this.apiUrl}/api/Orders/${orderId}`;  
   const headers = this.getAuthHeaders();  
   console.log('ApiService.getOrderById() called, endpoint:', endpoint);  
@@ -224,5 +224,44 @@ getOrderById(orderId: number): Observable<any> {
   );  
 }
 
+// Profile management methods
+updateProfile(profileData: any): Observable<any> {
+  const endpoint = `${this.apiUrl}/api/Auth/profile`;
+  const headers = this.getAuthHeaders();
+  console.log('ApiService.updateProfile() called, endpoint:', endpoint);
+    
+  return this.http.put(endpoint, profileData, { headers }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('ApiService.updateProfile() error:', error);
+      return throwError(() => error);
+    })
+  );
+}
+
+changePassword(passwordData: any): Observable<any> {
+  const endpoint = `${this.apiUrl}/api/Auth/change-password`;
+  const headers = this.getAuthHeaders();
+  console.log('ApiService.changePassword() called, endpoint:', endpoint);
+    
+  return this.http.put(endpoint, passwordData, { headers }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('ApiService.changePassword() error:', error);
+      return throwError(() => error);
+    })
+  );
+}
+
+getProfile(): Observable<any> {
+  const endpoint = `${this.apiUrl}/api/Auth/profile`;
+  const headers = this.getAuthHeaders();
+  console.log('ApiService.getProfile() called, endpoint:', endpoint);
+    
+  return this.http.get(endpoint, { headers }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('ApiService.getProfile() error:', error);
+      return throwError(() => error);
+    })
+  );
+}
 
 }

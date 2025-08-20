@@ -163,5 +163,23 @@ export class AuthService {
     this.login('demo-user-token', regularUser);
   }
 
+  // Profile update methods
+  updateUserProfile(updatedUser: Partial<User>): void {
+    const currentUser = this.getCurrentUser();
+    if (currentUser) {
+      const updatedUserData = { ...currentUser, ...updatedUser };
+      localStorage.setItem(this.userKey, JSON.stringify(updatedUserData));
+      this.currentUserSubject.next(updatedUserData);
+    }
+  }
+
+  updateUserEmail(newEmail: string): void {
+    this.updateUserProfile({ email: newEmail });
+  }
+
+  updateUserName(newName: string): void {
+    this.updateUserProfile({ name: newName });
+  }
+
   
 }

@@ -4,6 +4,50 @@
     <h1>Discover Our Products</h1>
     <p>Explore our amazing collection of high-quality products</p>
   </div>
+
+  <!-- Search and Filter Section -->
+  <div class="filters-section">
+    <!-- Search Bar -->
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search products...</mat-label>
+        <input 
+          matInput 
+          [formControl]="searchControl"
+          (input)="onSearchChange()"
+          placeholder="Search by name or description">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="category-filters">
+      <h3>Filter by Category</h3>
+      <div class="category-chips">
+        @for (category of categories; track category) {
+          <mat-chip 
+            [selected]="selectedCategories.includes(category)"
+            (click)="toggleCategory(category)"
+            class="category-chip">
+            {{ category }}
+          </mat-chip>
+        }
+      </div>
+    </div>
+
+    <!-- Clear Filters Button -->
+    @if (searchControl.value || selectedCategories.length > 0) {
+      <div class="clear-filters">
+        <button 
+          mat-stroked-button 
+          (click)="clearFilters()"
+          class="clear-btn">
+          <mat-icon>clear</mat-icon>
+          Clear Filters
+        </button>
+      </div>
+    }
+  </div>
   
   <!-- Content Section -->
   @if (isLoading) {
@@ -19,56 +63,76 @@
     </div>
   } @else {
     <!-- Products Grid -->
-    <div class="products-grid">
-      @for (product of products; track product.id) {
-        <mat-card class="product-card">
-          <!-- Product Image -->
-          <img 
-            mat-card-image 
-            class="product-image"
-            [src]="product.imageUrl" 
-            [alt]="product.name"
-            (error)="onImageError($event)">
-          
-          <!-- Product Content -->
-          <mat-card-content class="product-content">
-            <!-- Product Name -->
-            <h3 class="product-name">{{ product.name }}</h3>
+    @if (paginatedProducts.length > 0) {
+      <div class="products-grid">
+        @for (product of paginatedProducts; track product.id) {
+          <mat-card class="product-card">
+            <!-- Product Image -->
+            <img 
+              mat-card-image 
+              class="product-image"
+              [src]="product.imageUrl" 
+              [alt]="product.name"
+              (error)="onImageError($event)">
             
-            <!-- Product Description -->
-            <p class="product-description">{{ product.description }}</p>
-            
-            <!-- Product Price -->
-            <p class="product-price">${{ product.price | number:'1.2-2' }}</p>
-            
-            <!-- Product Details -->
-            <div class="product-details">
-              <!-- Stock Information -->
-              <div class="stock-info">
-                <div 
-                  class="stock-icon"
-                  [ngClass]="{
-                    'stock-high': product.stockQuantity > 50,
-                    'stock-medium': product.stockQuantity > 20 && product.stockQuantity <= 50,
-                    'stock-low': product.stockQuantity <= 20
-                  }">
+            <!-- Product Content -->
+            <mat-card-content class="product-content">
+              <!-- Product Name -->
+              <h3 class="product-name">{{ product.name }}</h3>
+              
+              <!-- Product Description -->
+              <p class="product-description">{{ product.description }}</p>
+              
+              <!-- Product Price -->
+              <p class="product-price">${{ product.price | number:'1.2-2' }}</p>
+              
+              <!-- Product Details -->
+              <div class="product-details">
+                <!-- Stock Information -->
+                <div class="stock-info">
+                  <div 
+                    class="stock-icon"
+                    [ngClass]="{
+                      'stock-high': product.stockQuantity > 50,
+                      'stock-medium': product.stockQuantity > 20 && product.stockQuantity <= 50,
+                      'stock-low': product.stockQuantity <= 20
+                    }">
+                  </div>
+                  <span>Stock: {{ product.stockQuantity }}</span>
                 </div>
-                <span>Stock: {{ product.stockQuantity }}</span>
+                
+                <!-- Category Badge -->
+                <span class="category-badge">{{ product.categoryName }}</span>
               </div>
               
-              <!-- Category Badge -->
-              <span class="category-badge">{{ product.categoryName }}</span>
-            </div>
-            
-            <!-- Add to Cart Button -->
-            <button class="add-to-cart-btn">
-              Add to Cart
-            </button>
-          </mat-card-content>
-        </mat-card>
-      }
-    </div>
+              <!-- Add to Cart Button -->
+              <button class="add-to-cart-btn">
+                Add to Cart
+              </button>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    } @else {
+      <!-- No Results Message -->
+      <div class="no-results">
+        <mat-icon class="no-results-icon">search_off</mat-icon>
+        <h3>No products found</h3>
+        <p>Try adjusting your search criteria or filters to find what you're looking for.</p>
+        <button 
+          mat-stroked-button 
+          (click)="clearFilters()"
+          class="clear-filters-btn">
+          Clear All Filters
+        </button>
+      </div>
+    }
     
+    <!-- Results Summary -->
+    <div class="results-summary">
+      <p>Showing {{ (pageNumber - 1) * pageSize + 1 }} - {{ Math.min(pageNumber * pageSize, totalCount) }} of {{ totalCount }} products</p>
+    </div>
+
     <!-- Pagination -->
     @if (totalCount > pageSize) {
       <div class="paginator-container">
