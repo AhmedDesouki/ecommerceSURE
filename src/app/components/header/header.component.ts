@@ -1,50 +1,48 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService, User } from '../../services/auth.service';
-import { MatIconModule } from '@angular/material/icon';
-import { MatBadgeModule } from '@angular/material/badge';
-import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule,MatIconModule, MatBadgeModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
-  currentUser$ = this.authService.currentUser$;
-  cartItemCount = 0;  
+export class HeaderComponent implements OnInit {
+  cartItemCount = 0;
+  isMobileMenuOpen = false;
 
-  constructor(public authService: AuthService,  private cartService: CartService  ) {}
+  constructor(private authService: AuthService) {}
 
-  logout(): void {
-    this.authService.logout();
-  }
-   ngOnInit() {  
-    this.cartService.cartItems$.subscribe(items => {  
-      this.cartItemCount = this.cartService.getCartItemCount();  
-    });  
-  }  
-  getUserInitials(): string {
-    const user = this.authService.getCurrentUser();
-    if (user && user.name) {
-      return user.name.split(' ').map(n => n[0]).join('').toUpperCase();
-    }
-    return 'U';
-  }
-
-  getUserName(): string {
-    const user = this.authService.getCurrentUser();
-    return user ? user.name : 'User';
-  }
-
-  isAdmin(): boolean {
-    return this.authService.isAdmin();
+  ngOnInit() {
+    // Initialize cart count (you can connect this to your cart service)
+    this.cartItemCount = 0;
   }
 
   isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
+  }
+
+  isAdmin(): boolean {
+    const user = this.authService.getCurrentUser();
+    return user?.role === 'admin';
+  }
+
+  getCurrentUser() {
+    return this.authService.getCurrentUser();
+  }
+
+  logout() {
+    this.authService.logout();
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
   }
 }

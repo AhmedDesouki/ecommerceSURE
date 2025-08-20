@@ -1,13 +1,13 @@
 <header class="header">
   <div class="header-container">
     <!-- Logo Section -->
-    <div class="logo-section">
-      <a routerLink="/" class="logo">SURE Store</a>
-      <p class="logo-subtitle">Premium Shopping Experience</p>
-    </div>
+    <a routerLink="/" class="logo">
+      <div class="logo-icon">🛍️</div>
+      <span>SURE STORE</span>
+    </a>
 
-    <!-- Navigation -->
-    <nav class="navigation">
+    <!-- Desktop Navigation -->
+    <nav class="nav">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
         Home
       </a>
@@ -18,65 +18,101 @@
         Categories
       </a>
       @if (isAdmin()) {
-        <a routerLink="/admin/products" routerLinkActive="active" class="nav-link admin-link">
-          <span class="admin-icon">⚙️</span>
+        <a routerLink="/admin/products" routerLinkActive="active" class="nav-link">
           Admin
         </a>
       }
-      <a routerLink="/about" routerLinkActive="active" class="nav-link">
-        About
-      </a>
-      <a routerLink="/contact" routerLinkActive="active" class="nav-link">
-        Contact
-      </a>
-       <!-- Cart Icon -->  
-      <a routerLink="/cart" routerLinkActive="active" class="nav-link cart-link">  
-        <div class="cart-icon-container">  
-          <span class="cart-icon">🛒</span>  
-          @if (cartItemCount > 0) {  
-            <span class="cart-badge">{{ cartItemCount }}</span>  
-          }  
-        </div>  
-        <span class="cart-text">Cart</span>  
-      </a>  
     </nav>
 
     <!-- User Section -->
     <div class="user-section">
-      <!-- Authenticated User -->
       @if (isAuthenticated()) {
-        <div class="user-menu">
-          <div class="user-avatar" [class.admin-avatar]="isAdmin()">
-            {{ getUserInitials() }}
-            @if (isAdmin()) {
-              <span class="admin-badge">A</span>
-            }
+        <!-- Cart Icon -->
+        <div class="cart-icon" routerLink="/cart">
+          🛒
+          @if (cartItemCount > 0) {
+            <span class="cart-badge">{{ cartItemCount }}</span>
+          }
+        </div>
+
+        <!-- User Info -->
+        <div class="user-info">
+          <div class="user-avatar">
+            {{ getCurrentUser()?.name?.charAt(0) || 'U' }}
           </div>
-          <div class="user-info">
-            <span class="user-name">{{ getUserName() }}</span>
-            <span class="user-role" [class.admin-role]="isAdmin()">
-              {{ isAdmin() ? 'Administrator' : 'User' }}
-            </span>
+          <div class="user-details">
+            <div class="user-name">{{ getCurrentUser()?.name || 'User' }}</div>
+            <div class="user-role">{{ getCurrentUser()?.role || 'user' }}</div>
           </div>
         </div>
+
+        <!-- User Actions -->
         <div class="user-actions">
           <a routerLink="/profile" class="btn btn-outline">Profile</a>
-          <button class="btn btn-outline" (click)="logout()">
-            Logout
-          </button>
+          <button class="btn btn-secondary" (click)="logout()">Logout</button>
         </div>
       } @else {
         <!-- Guest User -->
-        <div class="auth-buttons">
+        <div class="user-actions">
           <a routerLink="/login" class="btn btn-outline">Login</a>
-          <a routerLink="/register" class="btn btn-primary">Register</a>
+          <a routerLink="/register" class="btn btn-primary">Sign Up</a>
         </div>
       }
     </div>
 
     <!-- Mobile Menu Toggle -->
-    <button class="mobile-menu-toggle">
-      ☰
+    <button class="mobile-menu-toggle" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+      <span></span>
+      <span></span>
+      <span></span>
     </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" [class.active]="isMobileMenuOpen">
+    <nav class="mobile-nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-nav-link" (click)="closeMobileMenu()">
+        Home
+      </a>
+      <a routerLink="/products" routerLinkActive="active" class="mobile-nav-link" (click)="closeMobileMenu()">
+        Products
+      </a>
+      <a routerLink="/categories" routerLinkActive="active" class="mobile-nav-link" (click)="closeMobileMenu()">
+        Categories
+      </a>
+      @if (isAdmin()) {
+        <a routerLink="/admin/products" routerLinkActive="active" class="mobile-nav-link" (click)="closeMobileMenu()">
+          Admin
+        </a>
+      }
+    </nav>
+
+    @if (isAuthenticated()) {
+      <div class="mobile-user-section">
+        <div class="mobile-user-info">
+          <div class="user-avatar">
+            {{ getCurrentUser()?.name?.charAt(0) || 'U' }}
+          </div>
+          <div class="user-details">
+            <div class="user-name">{{ getCurrentUser()?.name || 'User' }}</div>
+            <div class="user-role">{{ getCurrentUser()?.role || 'user' }}</div>
+          </div>
+        </div>
+        <div class="mobile-user-actions">
+          <a routerLink="/cart" class="btn btn-outline" (click)="closeMobileMenu()">
+            🛒 Cart ({{ cartItemCount }})
+          </a>
+          <a routerLink="/profile" class="btn btn-secondary" (click)="closeMobileMenu()">Profile</a>
+          <button class="btn btn-primary" (click)="logout(); closeMobileMenu()">Logout</button>
+        </div>
+      </div>
+    } @else {
+      <div class="mobile-user-section">
+        <div class="mobile-user-actions">
+          <a routerLink="/login" class="btn btn-outline" (click)="closeMobileMenu()">Login</a>
+          <a routerLink="/register" class="btn btn-primary" (click)="closeMobileMenu()">Sign Up</a>
+        </div>
+      </div>
+    }
   </div>
 </header>

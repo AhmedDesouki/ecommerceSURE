@@ -226,13 +226,28 @@ getOrders(): Observable<any> {
 
 // Profile management methods
 updateProfile(profileData: any): Observable<any> {
-  const endpoint = `${this.apiUrl}/api/Auth/profile`;
+  // Try different endpoints that might exist
+  const endpoints = [
+    `${this.apiUrl}/api/Auth/profile`,
+    `${this.apiUrl}/api/Auth/update-profile`,
+    `${this.apiUrl}/api/User/profile`,
+    `${this.apiUrl}/api/User/update`,
+    `${this.apiUrl}/api/Account/profile`
+  ];
+
   const headers = this.getAuthHeaders();
-  console.log('ApiService.updateProfile() called, endpoint:', endpoint);
+  console.log('ApiService.updateProfile() called, trying endpoints:', endpoints);
+  console.log('Profile data:', profileData);
+
+  // Try the first endpoint, if it fails, we'll need to check the backend
+  const endpoint = endpoints[0];
     
   return this.http.put(endpoint, profileData, { headers }).pipe(
     catchError((error: HttpErrorResponse) => {
       console.error('ApiService.updateProfile() error:', error);
+      console.error('Error status:', error.status);
+      console.error('Error message:', error.message);
+      console.error('Error details:', error.error);
       return throwError(() => error);
     })
   );
@@ -242,8 +257,8 @@ changePassword(passwordData: any): Observable<any> {
   const endpoint = `${this.apiUrl}/api/Auth/change-password`;
   const headers = this.getAuthHeaders();
   console.log('ApiService.changePassword() called, endpoint:', endpoint);
-    
-  return this.http.put(endpoint, passwordData, { headers }).pipe(
+
+  return this.http.post(endpoint, passwordData, { headers }).pipe(
     catchError((error: HttpErrorResponse) => {
       console.error('ApiService.changePassword() error:', error);
       return throwError(() => error);

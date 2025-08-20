@@ -84,15 +84,40 @@ export class EditProfileComponent implements OnInit {
       this.apiService.updateProfile(profileData).subscribe({
         next: (response) => {
           this.profileMessage = 'Profile updated successfully!';
+          
+          // Update local user data
           this.authService.updateUserProfile({
-            name: profileData.fullName,
-            email: profileData.email
+            name: this.profileForm.value.fullName,
+            email: this.profileForm.value.email
           });
+          
+          // Update current user reference
+          this.currentUser = this.authService.getCurrentUser();
+          
           this.isLoading = false;
         },
         error: (error) => {
           console.error('Error updating profile:', error);
-          this.profileMessage = error.error?.message || 'Failed to update profile. Please try again.';
+          
+          let errorMessage = 'Failed to update profile. Please try again.';
+          
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.error?.errors) {
+            // Handle validation errors
+            const errors = error.error.errors;
+            errorMessage = Object.values(errors).flat().join(', ');
+          } else if (error.status === 400) {
+            errorMessage = 'Invalid data provided. Please check your input.';
+          } else if (error.status === 401) {
+            errorMessage = 'Unauthorized. Please log in again.';
+          } else if (error.status === 404) {
+            errorMessage = 'Profile not found.';
+          } else if (error.status === 500) {
+            errorMessage = 'Server error. Please try again later.';
+          }
+          
+          this.profileMessage = errorMessage;
           this.isLoading = false;
         }
       });
@@ -106,7 +131,8 @@ export class EditProfileComponent implements OnInit {
 
       const passwordData = {
         currentPassword: this.passwordForm.value.currentPassword,
-        newPassword: this.passwordForm.value.newPassword
+        newPassword: this.passwordForm.value.newPassword,
+        confirmPassword: this.passwordForm.value.confirmPassword
       };
 
       this.apiService.changePassword(passwordData).subscribe({
@@ -118,7 +144,26 @@ export class EditProfileComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error changing password:', error);
-          this.passwordMessage = error.error?.message || 'Failed to change password. Please try again.';
+          
+          let errorMessage = 'Failed to change password. Please try again.';
+          
+          if (error.error?.message) {
+            errorMessage = error.error.message;
+          } else if (error.error?.errors) {
+            // Handle validation errors
+            const errors = error.error.errors;
+            errorMessage = Object.values(errors).flat().join(', ');
+          } else if (error.status === 400) {
+            errorMessage = 'Invalid password data. Please check your input.';
+          } else if (error.status === 401) {
+            errorMessage = 'Current password is incorrect.';
+          } else if (error.status === 404) {
+            errorMessage = 'User not found.';
+          } else if (error.status === 500) {
+            errorMessage = 'Server error. Please try again later.';
+          }
+          
+          this.passwordMessage = errorMessage;
           this.isLoading = false;
         }
       });
