@@ -37,7 +37,7 @@
 .filter-card {  
   border-radius: 15px;  
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);  
-  background: rgb(76, 64, 112);  
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: 1px solid #000000;  
   transition: all 0.3s ease;  
 }  

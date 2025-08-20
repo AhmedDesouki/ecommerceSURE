@@ -144,7 +144,7 @@
 }  
   
 .shipping-form mat-card-header {  
-  background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);  
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;  
   padding: 25px;  
 }  
@@ -158,7 +158,7 @@
   
 .shipping-form mat-card-content {  
   padding: 30px;  
-  background: white;  
+  background: #6b767d;  
 }  
   
 /* Form Styling */  
