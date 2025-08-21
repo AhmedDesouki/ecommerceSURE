@@ -12,6 +12,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ApiService } from '../../../services/api.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-admin-products',
@@ -28,7 +29,8 @@ import { ApiService } from '../../../services/api.service';
     MatTableModule,
     MatIconModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    RouterModule
   ],
   templateUrl: './admin-products.component.html',
   styleUrls: ['./admin-products.component.css']
