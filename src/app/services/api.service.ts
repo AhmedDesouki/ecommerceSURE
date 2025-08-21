@@ -132,6 +132,43 @@ updateProduct(productId: number, productData: any): Observable<any> {
     })  
   );  
 }  
+
+  // Admin Category management
+  createCategory(categoryData: any): Observable<any> {
+    const endpoint = `${this.apiUrl}/api/Categories`;
+    const headers = this.getAuthHeaders();
+    console.log('ApiService.createCategory() called, endpoint:', endpoint);
+    return this.http.post(endpoint, categoryData, { headers }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('ApiService.createCategory() error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  updateCategory(categoryId: number, categoryData: any): Observable<any> {
+    const endpoint = `${this.apiUrl}/api/Categories/${categoryId}`;
+    const headers = this.getAuthHeaders();
+    console.log('ApiService.updateCategory() called, endpoint:', endpoint);
+    return this.http.put(endpoint, categoryData, { headers }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('ApiService.updateCategory() error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  deleteCategory(categoryId: number): Observable<any> {
+    const endpoint = `${this.apiUrl}/api/Categories/${categoryId}`;
+    const headers = this.getAuthHeaders();
+    console.log('ApiService.deleteCategory() called, endpoint:', endpoint);
+    return this.http.delete(endpoint, { headers }).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('ApiService.deleteCategory() error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
   
 getProductsByCategory(categoryId?: number): Observable<any> {  
   let endpoint = `${this.apiUrl}/api/Products`;  
