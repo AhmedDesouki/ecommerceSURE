@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
+import { ApiService } from '../../services/api.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { CartService } from '../../services/cart.service';
@@ -17,10 +18,14 @@ export class HeaderComponent {
   currentUser$ = this.authService.currentUser$;
   cartItemCount = 0;  
 
-  constructor(public authService: AuthService,  private cartService: CartService  ) {}
+  constructor(public authService: AuthService,  private cartService: CartService, private apiService: ApiService  ) {}
 
   logout(): void {
-    this.authService.logout();
+    // Call backend to invalidate refresh token, then clear client auth regardless of server result
+    this.apiService.logout().subscribe({
+      next: () => this.authService.logout(),
+      error: () => this.authService.logout()
+    });
   }
    ngOnInit() {  
     this.cartService.cartItems$.subscribe(items => {  

@@ -53,9 +53,10 @@ export class EditProfileComponent implements OnInit {
     this.isLoading = true;
     this.apiService.getProfile().subscribe({
       next: (response) => {
+        const user = response?.user || {};
         this.profileForm.patchValue({
-          fullName: response.fullName || this.currentUser?.name,
-          email: response.email || this.currentUser?.email
+          fullName: user.fullName || this.currentUser?.name,
+          email: user.email || this.currentUser?.email
         });
         this.isLoading = false;
       },
@@ -77,16 +78,14 @@ export class EditProfileComponent implements OnInit {
       this.profileMessage = '';
 
       const profileData = {
-        fullName: this.profileForm.value.fullName,
-        email: this.profileForm.value.email
+        fullName: this.profileForm.value.fullName
       };
 
       this.apiService.updateProfile(profileData).subscribe({
         next: (response) => {
           this.profileMessage = 'Profile updated successfully!';
           this.authService.updateUserProfile({
-            name: profileData.fullName,
-            email: profileData.email
+            name: profileData.fullName
           });
           this.isLoading = false;
         },
@@ -106,7 +105,8 @@ export class EditProfileComponent implements OnInit {
 
       const passwordData = {
         currentPassword: this.passwordForm.value.currentPassword,
-        newPassword: this.passwordForm.value.newPassword
+        newPassword: this.passwordForm.value.newPassword,
+        confirmNewPassword: this.passwordForm.value.confirmPassword
       };
 
       this.apiService.changePassword(passwordData).subscribe({
