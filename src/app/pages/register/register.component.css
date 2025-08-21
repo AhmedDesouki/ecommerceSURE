@@ -4,7 +4,7 @@
   align-items: center;
   min-height: calc(100vh - 120px);
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
 }
 
 .register-card {
@@ -80,14 +80,14 @@ mat-form-field {
 }
 
 .login-link a {
-  color: #667eea;
+  color: #2563eb;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .login-link a:hover {
-  color: #764ba2;
+  color: #1e3a8a;
   text-decoration: underline;
 }
 

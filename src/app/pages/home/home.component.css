@@ -1,6 +1,6 @@
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
   color: white;
   padding: 80px 0;
   text-align: center;
@@ -65,7 +65,7 @@
 
 .hero-btn-primary {
   background: white;
-  color: #667eea;
+  color: #2563eb;
 }
 
 .hero-btn-primary:hover {
@@ -81,7 +81,7 @@
 
 .hero-btn-secondary:hover {
   background: white;
-  color: #667eea;
+  color: #2563eb;
   transform: translateY(-3px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
@@ -139,7 +139,7 @@
 .category-image {
   width: 100%;
   height: 200px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,7 +236,7 @@
 
 .featured-btn {
   width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
   color: white;
   border: none;
   padding: 15px;
@@ -272,7 +272,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 20px 0;
-  color: #667eea;
+  color: #2563eb;
 }
 
 .promo-subtitle {
@@ -298,7 +298,7 @@
 .feature-icon {
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -311,7 +311,7 @@
   font-size: 1.3rem;
   font-weight: 600;
   margin: 0 0 15px 0;
-  color: #667eea;
+  color: #2563eb;
 }
 
 .feature-description {
@@ -365,13 +365,13 @@
 
 .newsletter-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .newsletter-btn {
   padding: 15px 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
   color: white;
   border: none;
   border-radius: 30px;
