@@ -45,11 +45,13 @@ private getAuthHeaders(): { [key: string]: string } {
     );
   }
 
-  refreshToken(token: string): Observable<any> {
+  refreshToken(): Observable<any> {
     const endpoint = `${this.apiUrl}/api/Auth/refresh`;
     console.log('ApiService.refreshToken() called, endpoint:', endpoint);
+    const token = this.authService.getToken();
+    const refreshToken = this.authService.getRefreshToken();
     
-    return this.http.post(endpoint, { token }).pipe(
+    return this.http.post(endpoint, { token, refreshToken }).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('ApiService.refreshToken() error:', error);
         return throwError(() => error);
@@ -283,7 +285,7 @@ changePassword(passwordData: any): Observable<any> {
   const headers = this.getAuthHeaders();
   console.log('ApiService.changePassword() called, endpoint:', endpoint);
     
-  return this.http.put(endpoint, passwordData, { headers }).pipe(
+  return this.http.post(endpoint, passwordData, { headers }).pipe(
     catchError((error: HttpErrorResponse) => {
       console.error('ApiService.changePassword() error:', error);
       return throwError(() => error);
@@ -299,6 +301,19 @@ getProfile(): Observable<any> {
   return this.http.get(endpoint, { headers }).pipe(
     catchError((error: HttpErrorResponse) => {
       console.error('ApiService.getProfile() error:', error);
+      return throwError(() => error);
+    })
+  );
+}
+
+// Auth auxiliary methods
+logout(): Observable<any> {
+  const endpoint = `${this.apiUrl}/api/Auth/logout`;
+  const headers = this.getAuthHeaders();
+  console.log('ApiService.logout() called, endpoint:', endpoint);
+  return this.http.post(endpoint, {}, { headers }).pipe(
+    catchError((error: HttpErrorResponse) => {
+      console.error('ApiService.logout() error:', error);
       return throwError(() => error);
     })
   );

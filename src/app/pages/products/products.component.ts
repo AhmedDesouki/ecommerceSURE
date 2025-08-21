@@ -48,7 +48,7 @@ searchTerm: string = '';
   
   ngOnInit() {  
     this.loadCategories();  
-    this.loadProducts();  
+    this.performSearch();  
 
       // Setup search functionality with debounce  
   this.searchControl.valueChanges.pipe(  
@@ -96,31 +96,13 @@ clearSearch() {
   }  
   
   loadProducts(categoryId?: number) {  
-    this.isLoading = true;  
     this.selectedCategoryId = categoryId || null;  
     this.performSearch();  
-    this.apiService.getProductsByCategory(categoryId).subscribe({  
-      next: (response) => {  
-        this.products = response.products || [];  
-        this.totalCount = response.totalCount || 0;  
-        this.pageNumber = response.pageNumber || 1;  
-        this.pageSize = response.pageSize || 20;  
-        this.totalPages = response.totalPages || 1;  
-        this.isLoading = false;  
-      },  
-      error: (err) => {  
-        this.error = 'Failed to load products';  
-        this.isLoading = false;  
-        console.error('Error loading products:', err);  
-      }  
-    });  
   }  
   
   onCategoryChange(categoryId: number | null) {  
     this.selectedCategoryId = categoryId;  
-    this.selectedCategoryId = categoryId;  
     this.performSearch();  
-    this.loadProducts(categoryId || undefined);  
   }  
   
   addToCart(product: any) {  
