@@ -6,6 +6,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { AdminProductsComponent } from './pages/admin/admin-products/admin-products.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/auth.guard';
+import { AdminCategoriesComponent } from './pages/admin/admin-categories/admin-categories.component';
 import { CartComponent } from './pages/cart/cart.component';  
 import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
@@ -18,6 +19,11 @@ export const routes: Routes = [
   { 
     path: 'admin/products', 
     component: AdminProductsComponent,
+    canActivate: [AdminGuard]
+  },
+  { 
+    path: 'admin/categories', 
+    component: AdminCategoriesComponent,
     canActivate: [AdminGuard]
   },
   { path: 'cart', component: CartComponent },  
